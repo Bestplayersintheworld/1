@@ -1,0 +1,42 @@
+-- Function to highlight a player's character
+local function highlightPlayer(player)
+    player.CharacterAdded:Connect(function(character)
+        -- Wait for the character to fully load
+        character:WaitForChild("Humanoid")
+
+        -- Check if Highlight already exists (avoid duplicates)
+        if not character:FindFirstChild("Highlight") then
+            local highlight = Instance.new("Highlight")
+            highlight.Name = "Highlight"
+            highlight.FillColor = Color3.fromRGB(255, 215, 0) -- Gold color
+            highlight.OutlineColor = Color3.fromRGB(255, 255, 255) -- White outline
+            highlight.FillTransparency = 0.5 -- Slight transparency
+            highlight.OutlineTransparency = 0 -- Fully visible outline
+            highlight.Parent = character
+        end
+    end)
+
+    -- Add highlight to the character if it exists already
+    if player.Character then
+        local character = player.Character
+        if not character:FindFirstChild("Highlight") then
+            local highlight = Instance.new("Highlight")
+            highlight.Name = "Highlight"
+            highlight.FillColor = Color3.fromRGB(255, 215, 0)
+            highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
+            highlight.FillTransparency = 0.5
+            highlight.OutlineTransparency = 0
+            highlight.Parent = character
+        end
+    end
+end
+
+-- Monitor new players joining the game
+game.Players.PlayerAdded:Connect(function(player)
+    highlightPlayer(player)
+end)
+
+-- Apply highlighting to existing players already in the game
+for _, player in pairs(game.Players:GetPlayers()) do
+    highlightPlayer(player)
+end
